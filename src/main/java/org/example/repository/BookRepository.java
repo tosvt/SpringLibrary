@@ -12,4 +12,6 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     @Override
     @EntityGraph(attributePaths = {"author", "genre", "commentList"}) // джойним необходимое
     List<Book> findAll();
+
+    List<Book> findByName(String name);
 }

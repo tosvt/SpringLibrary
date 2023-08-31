@@ -31,7 +31,8 @@
                     type="NUMERIC(19,0)">
                 <constraints nullable="false"
                              foreignKeyName="fk_comment_book"
-                             references="book(id)"/>
+                             references="book(id)"
+                             deleteCascade="true"/>
             </column>
 
         </createTable>
