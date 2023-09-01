@@ -4,9 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.domain.Author;
 import org.example.domain.Book;
 import org.example.domain.Comment;
-import org.example.repository.AuthorRepository;
-import org.example.repository.BookRepository;
-import org.example.repository.CommentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,11 +13,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LibDemoService {
 
-    private final AuthorRepository authorRepository;
+    private final AuthorService authorService;
 
-    private final CommentRepository commentRepository;
+    private final BookService bookService;
 
-    private final BookRepository bookRepository;
+    private final GenreService genreService;
 
     /*public LibDemoService(AuthorRepository authorRepository) {
         this.authorRepository = authorRepository;
@@ -28,7 +25,7 @@ public class LibDemoService {
 
     public void authorDemo() {
 
-        List<Author> authorList = authorRepository.findAll();
+        List<Author> authorList = authorService.getAll();
 
         System.out.println("========");
         for (Author author : authorList) {
@@ -36,12 +33,9 @@ public class LibDemoService {
         }
         System.out.println("========");
 
-        Author author = Author.builder()
-                .name("Сергей")
-                .build();
 
-        authorRepository.save(author);
-        authorList = authorRepository.findAll();
+        authorService.update(1, "Иван");
+        authorList = authorService.getAll();
 
         System.out.println("========");
         for (Author author1 : authorList) {
@@ -49,15 +43,14 @@ public class LibDemoService {
         }
         System.out.println("========");
 
-        System.out.println(authorRepository.findByName("Имя автора 1"));
 
     }
 
     @Transactional
     public void bookDemo() {
-        List<Book> bookList = bookRepository.findAll();
+        List<Book> bookList = bookService.getAll();
 //        bookList.stream().map(Book::getName).forEach(System.out::println);
-        /*for (Book book : bookList) {
+        for (Book book : bookList) {
             System.out.println(book.getAuthor() + ":");
             System.out.println(book.getAuthor().getName() + "," + book.getGenre().getName());
 
@@ -65,22 +58,28 @@ public class LibDemoService {
             for (Comment comment : commentList) {
                 System.out.println(comment.getContent());
             }
-        }*/
-        List<Book> bookList1 = bookRepository.findByName("Название книги 3");
-        for (Book book1 : bookList1) {
-            System.out.println(book1.getAuthor() + ":");
-            System.out.println(book1.getAuthor().getName() + "," + book1.getGenre().getName());
+        }
 
-            List<Comment> commentList = book1.getCommentList();
-            for (Comment comment : commentList) {
-                System.out.println(comment.getContent());
+        bookService.insert("Название книги 4", "Имя автора 4", "Жанр 3");
+
+        bookList = bookService.getAll();
+//        bookList.stream().map(Book::getName).forEach(System.out::println);
+        for (Book book : bookList) {
+            System.out.println(book.getAuthor() + ":");
+            System.out.println(book.getAuthor().getName() + "," + book.getGenre().getName());
+
+            List<Comment> commentList = book.getCommentList();
+            if (commentList != null) {
+                for (Comment comment : commentList) {
+                    System.out.println(comment.getContent());
+                }
             }
         }
     }
 
     @Transactional
     public void commentDemo() {
-        commentRepository.updateCommentById(1, "Очень интересно, ничего не понятно");
+        /*commentRepository.updateCommentById(1, "Очень интересно, ничего не понятно");
         List<Comment> commentList = commentRepository.findAll();
 
         for (Comment comment : commentList) {
@@ -93,6 +92,6 @@ public class LibDemoService {
         for (Comment comment : commentList) {
 
             System.out.println(comment.getId() + " - " + comment.getContent());
-        }
+        }*/
     }
 }
